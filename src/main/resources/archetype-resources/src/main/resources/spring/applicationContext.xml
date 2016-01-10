@@ -1,0 +1,51 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+  <context:annotation-config/>
+
+  <context:component-scan base-package="${package}.*"/>
+
+  <context:property-placeholder location="classpath:application.properties"/>
+
+  <tx:annotation-driven transaction-manager="transactionManager"/>
+
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"></property>
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="${package}.mappers"/>
+  </bean>
+
+  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg index="0" ref="sqlSessionFactory"/>
+  </bean>
+
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="typeAliasesPackage" value="${package}.entities"/>
+    <property name="mapperLocations" value="classpath*:${packageInPathFormat}/mappers/**/*.xml"/>
+  </bean>
+
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="${symbol_dollar}{jdbc.driverClassName}"></property>
+    <property name="url" value="${symbol_dollar}{jdbc.url}"></property>
+    <property name="username" value="${symbol_dollar}{jdbc.username}"></property>
+    <property name="password" value="${symbol_dollar}{jdbc.password}"></property>
+  </bean>
+
+</beans>
