@@ -5,7 +5,7 @@ This is the archetype used to generate a new project quickly which uses SpringMV
 
 ```
 $ git clone [project_url]
-$ cd quickstart-springmvc-kotlin-mybatis
+$ cd quickstart-kotlin-springmvc-mybatis
 $ mvn clean install
 ```
 
